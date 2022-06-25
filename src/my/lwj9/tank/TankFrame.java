@@ -7,6 +7,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.awt.Image;
 import java.awt.Color;
@@ -53,11 +54,30 @@ public class TankFrame extends Frame {
 
 	@Override
 	public void paint(Graphics g) {
+		Color c = g.getColor();
+		g.setColor(Color.WHITE);
+		g.drawString("bullets quantity: " + bullets.size(), 10, 60);
+		g.setColor(c);
 
 		myTank.paint(g);
-		for (Bullet b : bullets) {
-			b.paint(g);
+
+		// ! java.util.ConcurrentModificationException
+		// for (Bullet b : bullets) {
+		// b.paint(g);
+		// }
+
+		for (int i = 0; i < bullets.size(); i++) {
+			bullets.get(i).paint(g);
 		}
+
+		// for (Iterator<Bullet> it = bullets.iterator(); it.hasNext();) {
+		// Bullet b = it.next();
+		// if (!b.live) {
+		// it.remove();
+		// continue;
+		// }
+		// b.paint(g);
+		// }
 	}
 
 	class MykeyListener extends KeyAdapter {
@@ -82,6 +102,9 @@ public class TankFrame extends Frame {
 					break;
 				case KeyEvent.VK_DOWN:
 					bD = true;
+					break;
+				case KeyEvent.VK_CONTROL:
+					myTank.fire();
 					break;
 			}
 			setMainTankDir();

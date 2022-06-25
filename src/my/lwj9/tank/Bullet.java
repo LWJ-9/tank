@@ -2,25 +2,46 @@ package my.lwj9.tank;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import static my.lwj9.tank.Main.FPS;
 
 public class Bullet {
-	private static final int SPEED = 20;
-	private static int WIDTH = 30, HEIGHT = 30;
-
+	private static final int SPEED = 600 / FPS;
+	public static int WIDTH = ResourceMgr.bulletD.getWidth();
+	public static int HEIGHT = ResourceMgr.bulletD.getHeight();
 	private int x, y;
 	private Dir dir;
 
-	public Bullet(int x, int y, Dir dir) {
+	protected boolean live = true;
+	TankFrame tf = null;
+
+	public Bullet(int x, int y, Dir dir, TankFrame tf) {
 		this.x = x;
 		this.y = y;
 		this.dir = dir;
+		this.tf = tf;
 	}
 
 	public void paint(Graphics g) {
-		Color c = g.getColor();
-		g.setColor(Color.RED);
-		g.fillOval(x, y, WIDTH, HEIGHT);
-		g.setColor(c);
+		if (!live) {
+			tf.bullets.remove(this);
+		}
+		switch (dir) {
+			case LEFT:
+				g.drawImage(ResourceMgr.bulletL, x, y, null);
+				break;
+
+			case UP:
+				g.drawImage(ResourceMgr.bulletU, x, y, null);
+				break;
+
+			case RIGHT:
+				g.drawImage(ResourceMgr.bulletR, x, y, null);
+				break;
+
+			case DOWN:
+				g.drawImage(ResourceMgr.bulletD, x, y, null);
+				break;
+		}
 		move();
 	}
 
@@ -40,5 +61,7 @@ public class Bullet {
 				y += SPEED;
 				break;
 		}
+		if (x < 0 || y < 10 || x > TankFrame.GAME_WIDTH || y > TankFrame.GAME_HEIGHT)
+			live = false;
 	}
 }
