@@ -6,9 +6,8 @@ public class Main {
 
 		TankFrame f = new TankFrame();
 		f.setVisible(true);
-		System.out.println(0 == 9);
 		while (true) {
-			Thread.sleep(50);
+			Thread.sleep(16);
 			f.repaint();
 		}
 	}

@@ -6,15 +6,21 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.ArrayList;
+import java.util.List;
+import java.awt.Image;
+import java.awt.Color;
 
 public class TankFrame extends Frame {
 
 	private static final long serialVersionUID = 1360366976926371951L;
-	Tank myTank = new Tank(100, 100, Dir.DOWN);
+	Tank myTank = new Tank(100, 100, Dir.DOWN, this);
+	List<Bullet> bullets = new ArrayList<>();
+	static final int GAME_WIDTH = 800, GAME_HEIGHT = 600;
 
 	public TankFrame() {
 		super();
-		setSize(800, 600);
+		setSize(GAME_WIDTH, GAME_HEIGHT);
 		setResizable(false);
 		setTitle("tank war");
 
@@ -29,10 +35,29 @@ public class TankFrame extends Frame {
 				});
 	}
 
+	Image offScreenImage = null;
+
+	@Override
+	public void update(Graphics g) {
+		if (offScreenImage == null) {
+			offScreenImage = this.createImage(GAME_WIDTH, GAME_HEIGHT);
+		}
+		Graphics gOffScreen = offScreenImage.getGraphics();
+		Color c = gOffScreen.getColor();
+		gOffScreen.setColor(Color.BLACK);
+		gOffScreen.fillRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
+		gOffScreen.setColor(c);
+		paint(gOffScreen);
+		g.drawImage(offScreenImage, 0, 0, null);
+	}
+
 	@Override
 	public void paint(Graphics g) {
 
 		myTank.paint(g);
+		for (Bullet b : bullets) {
+			b.paint(g);
+		}
 	}
 
 	class MykeyListener extends KeyAdapter {
@@ -77,6 +102,9 @@ public class TankFrame extends Frame {
 					break;
 				case KeyEvent.VK_DOWN:
 					bD = false;
+					break;
+				case KeyEvent.VK_CONTROL:
+					myTank.fire();
 					break;
 			}
 			setMainTankDir();

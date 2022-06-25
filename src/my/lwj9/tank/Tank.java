@@ -1,5 +1,6 @@
 package my.lwj9.tank;
 
+import java.awt.Color;
 import java.awt.Graphics;
 
 public class Tank {
@@ -7,6 +8,7 @@ public class Tank {
 	private Dir dir = Dir.DOWN;
 	private static final int SPEED = 10;
 	private boolean moving = false;
+	private TankFrame tf = null;
 
 	public boolean isMmoving() {
 		return moving;
@@ -24,16 +26,19 @@ public class Tank {
 		this.dir = dir;
 	}
 
-	public Tank(int x, int y, Dir dir) {
+	public Tank(int x, int y, Dir dir, TankFrame tf) {
 		super();
 		this.y = y;
 		this.dir = dir;
 		this.x = x;
+		this.tf = tf;
 	}
 
 	public void paint(Graphics g) {
-
+		Color c = g.getColor();
+		g.setColor(Color.GREEN);
 		g.fillRect(x, y, 50, 50);
+		g.setColor(c);
 		move();
 	}
 
@@ -54,5 +59,9 @@ public class Tank {
 				y += SPEED;
 				break;
 		}
+	}
+
+	public void fire() {
+		tf.bullets.add(new Bullet(this.x, this.y, this.dir));
 	}
 }
