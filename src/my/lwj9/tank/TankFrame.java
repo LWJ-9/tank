@@ -7,7 +7,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
-import java.util.Iterator;
+//import java.util.Iterator;
 import java.util.List;
 import java.awt.Image;
 import java.awt.Color;
@@ -15,8 +15,9 @@ import java.awt.Color;
 public class TankFrame extends Frame {
 
 	private static final long serialVersionUID = 1360366976926371951L;
-	Tank myTank = new Tank(100, 100, Dir.DOWN, this);
+	Tank myTank = new Tank(200, 400, Dir.DOWN, Group.GOOD, this);
 	List<Bullet> bullets = new ArrayList<>();
+	List<Tank> tanks = new ArrayList<>();
 	static final int GAME_WIDTH = 800, GAME_HEIGHT = 600;
 
 	public TankFrame() {
@@ -78,6 +79,15 @@ public class TankFrame extends Frame {
 		// }
 		// b.paint(g);
 		// }
+
+		for (int i = 0; i < tanks.size(); i++) {
+			tanks.get(i).paint(g);
+		}
+		for (int i = 0; i < bullets.size(); i++) {
+			for (int j = 0; j < tanks.size(); j++) {
+				bullets.get(i).collideWith(tanks.get(j));
+			}
+		}
 	}
 
 	class MykeyListener extends KeyAdapter {

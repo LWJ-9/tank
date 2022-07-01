@@ -1,7 +1,9 @@
 package my.lwj9.tank;
 
-import java.awt.Color;
+// import java.awt.Color;
 import java.awt.Graphics;
+import java.util.Random;
+
 import static my.lwj9.tank.Main.FPS;
 
 public class Tank {
@@ -12,8 +14,36 @@ public class Tank {
 	public static int WIDTH = ResourceMgr.tankD.getWidth();
 	public static int HEIGHT = ResourceMgr.tankD.getHeight();
 
+	private Random random = new Random();
 	private boolean moving = false;
 	private TankFrame tf = null;
+	private boolean living = true;
+	private Group group = Group.BAD;
+
+	public Tank(int x, int y, Dir dir, Group group, TankFrame tf) {
+		super();
+		this.y = y;
+		this.dir = dir;
+		this.x = x;
+		this.group = group;
+		this.tf = tf;
+	}
+
+	public int getX() {
+		return x;
+	}
+
+	public void setX(int x) {
+		this.x = x;
+	}
+
+	public int getY() {
+		return y;
+	}
+
+	public void setY(int y) {
+		this.y = y;
+	}
 
 	public boolean isMoving() {
 		return moving;
@@ -31,15 +61,18 @@ public class Tank {
 		this.dir = dir;
 	}
 
-	public Tank(int x, int y, Dir dir, TankFrame tf) {
-		super();
-		this.y = y;
-		this.dir = dir;
-		this.x = x;
-		this.tf = tf;
+	public Group getGroup() {
+		return group;
+	}
+
+	public void setGroup(Group group) {
+		this.group = group;
 	}
 
 	public void paint(Graphics g) {
+		if (!living) {
+			tf.tanks.remove(this);
+		}
 		switch (dir) {
 			case LEFT:
 				g.drawImage(ResourceMgr.tankL, x, y, null);
@@ -61,6 +94,8 @@ public class Tank {
 				break;
 		}
 		move();
+		if (random.nextInt(10) > 5)
+			this.fire();
 	}
 
 	private void move() {
@@ -80,11 +115,17 @@ public class Tank {
 				y += SPEED;
 				break;
 		}
+
 	}
 
 	public void fire() {
 		int bX = this.x + WIDTH / 2 - Bullet.WIDTH / 2;
 		int bY = this.y + HEIGHT / 2 - Bullet.HEIGHT / 2;
-		tf.bullets.add(new Bullet(bX, bY, this.dir, this.tf));
+		tf.bullets.add(new Bullet(bX, bY, this.dir, this.group, this.tf));
 	}
+
+	public void die() {
+		this.living = false;
+	}
+
 }

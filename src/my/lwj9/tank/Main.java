@@ -6,11 +6,17 @@ public class Main {
 
 	public static void main(String[] args) throws InterruptedException {
 
-		TankFrame f = new TankFrame();
-		f.setVisible(true);
+		TankFrame tf = new TankFrame();
+
+		// initialize tank
+		for (int i = 0; i < 5; i++) {
+			tf.tanks.add(new Tank(50 + i * 80, 100, Dir.DOWN, Group.BAD, tf));
+		}
+
+		tf.setVisible(true);
 		while (true) {
 			Thread.sleep(1000 / FPS);
-			f.repaint();
+			tf.repaint();
 		}
 	}
 }

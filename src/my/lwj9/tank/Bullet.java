@@ -1,8 +1,9 @@
 package my.lwj9.tank;
 
-import java.awt.Color;
+//import java.awt.Color;
 import java.awt.Graphics;
 import static my.lwj9.tank.Main.FPS;
+import java.awt.Rectangle;
 
 public class Bullet {
 	private static final int SPEED = 600 / FPS;
@@ -11,18 +12,20 @@ public class Bullet {
 	private int x, y;
 	private Dir dir;
 
-	protected boolean live = true;
+	protected boolean living = true;
 	TankFrame tf = null;
+	private Group group = Group.BAD;
 
-	public Bullet(int x, int y, Dir dir, TankFrame tf) {
+	public Bullet(int x, int y, Dir dir, Group group, TankFrame tf) {
 		this.x = x;
 		this.y = y;
 		this.dir = dir;
+		this.group = group;
 		this.tf = tf;
 	}
 
 	public void paint(Graphics g) {
-		if (!live) {
+		if (!living) {
 			tf.bullets.remove(this);
 		}
 		switch (dir) {
@@ -62,6 +65,21 @@ public class Bullet {
 				break;
 		}
 		if (x < 0 || y < 10 || x > TankFrame.GAME_WIDTH || y > TankFrame.GAME_HEIGHT)
-			live = false;
+			living = false;
+	}
+
+	public void collideWith(Tank tank) {
+		if (this.group == tank.getGroup())
+			return;
+		Rectangle rect1 = new Rectangle(this.x, this.y, WIDTH, HEIGHT);
+		Rectangle rect2 = new Rectangle(tank.getX(), tank.getY(), Tank.WIDTH, Tank.HEIGHT);
+		if (rect1.intersects(rect2)) {
+			tank.die();
+			this.die();
+		}
+	}
+
+	private void die() {
+		this.living = false;
 	}
 }
