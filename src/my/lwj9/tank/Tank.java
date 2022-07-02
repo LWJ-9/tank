@@ -15,7 +15,7 @@ public class Tank {
 	public static int HEIGHT = ResourceMgr.tankD.getHeight();
 
 	private Random random = new Random();
-	private boolean moving = false;
+	private boolean moving = true;
 	private TankFrame tf = null;
 	private boolean living = true;
 	private Group group = Group.BAD;
@@ -27,6 +27,7 @@ public class Tank {
 		this.x = x;
 		this.group = group;
 		this.tf = tf;
+		this.moving = group == Group.BAD ? true : false;
 	}
 
 	public int getX() {
@@ -69,6 +70,29 @@ public class Tank {
 		this.group = group;
 	}
 
+	private void move() {
+		if (!moving)
+			return;
+		switch (dir) {
+			case LEFT:
+				x -= SPEED;
+				break;
+			case UP:
+				y -= SPEED;
+				break;
+			case RIGHT:
+				x += SPEED;
+				break;
+			case DOWN:
+				y += SPEED;
+				break;
+		}
+		if (this.group == Group.BAD && random.nextInt(100) > 95)
+			this.fire();
+		if (this.group == Group.BAD && random.nextInt(100) > 95)
+			randomDir();
+	}
+
 	public void paint(Graphics g) {
 		if (!living) {
 			tf.tanks.remove(this);
@@ -94,28 +118,11 @@ public class Tank {
 				break;
 		}
 		move();
-		if (random.nextInt(10) > 5)
-			this.fire();
+
 	}
 
-	private void move() {
-		if (!moving)
-			return;
-		switch (dir) {
-			case LEFT:
-				x -= SPEED;
-				break;
-			case UP:
-				y -= SPEED;
-				break;
-			case RIGHT:
-				x += SPEED;
-				break;
-			case DOWN:
-				y += SPEED;
-				break;
-		}
-
+	private void randomDir() {
+		this.dir = Dir.values()[random.nextInt(4)];
 	}
 
 	public void fire() {

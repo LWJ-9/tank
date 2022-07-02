@@ -15,10 +15,12 @@ import java.awt.Color;
 public class TankFrame extends Frame {
 
 	private static final long serialVersionUID = 1360366976926371951L;
+	static final int GAME_WIDTH = 800, GAME_HEIGHT = 600;
+
 	Tank myTank = new Tank(200, 400, Dir.DOWN, Group.GOOD, this);
 	List<Bullet> bullets = new ArrayList<>();
 	List<Tank> tanks = new ArrayList<>();
-	static final int GAME_WIDTH = 800, GAME_HEIGHT = 600;
+	List<Explode> explodes = new ArrayList<>();
 
 	public TankFrame() {
 		super();
@@ -58,6 +60,8 @@ public class TankFrame extends Frame {
 		Color c = g.getColor();
 		g.setColor(Color.WHITE);
 		g.drawString("bullets quantity: " + bullets.size(), 10, 60);
+		g.drawString("enemies quantity: " + tanks.size(), 10, 80);
+		g.drawString("explodes quantity: " + explodes.size(), 10, 100);
 		g.setColor(c);
 
 		myTank.paint(g);
@@ -87,6 +91,9 @@ public class TankFrame extends Frame {
 			for (int j = 0; j < tanks.size(); j++) {
 				bullets.get(i).collideWith(tanks.get(j));
 			}
+		}
+		for (int i = 0; i < explodes.size(); i++) {
+			explodes.get(i).paint(g);
 		}
 	}
 
