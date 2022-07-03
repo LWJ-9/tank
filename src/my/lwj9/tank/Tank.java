@@ -9,10 +9,10 @@ import static my.lwj9.tank.Main.FPS;
 public class Tank {
 	private int x, y;
 	private Dir dir = Dir.DOWN;
-	private static final int SPEED = 300 / FPS;
+	private static final int SPEED = 200 / FPS;
 
-	public static int WIDTH = ResourceMgr.tankD.getWidth();
-	public static int HEIGHT = ResourceMgr.tankD.getHeight();
+	public static int WIDTH = ResourceMgr.goodTankD.getWidth();
+	public static int HEIGHT = ResourceMgr.goodTankD.getHeight();
 
 	private Random random = new Random();
 	private boolean moving = true;
@@ -91,6 +91,19 @@ public class Tank {
 			this.fire();
 		if (this.group == Group.BAD && random.nextInt(100) > 95)
 			randomDir();
+
+		boundCheck();
+	}
+
+	private void boundCheck() {
+		if (this.x < 0)
+			x = 0;
+		if (this.y < 30)
+			y = 30;
+		if (this.x > TankFrame.GAME_WIDTH - Tank.HEIGHT - 2)
+			x = TankFrame.GAME_WIDTH - Tank.HEIGHT - 2;
+		if (this.y > TankFrame.GAME_HEIGHT - Tank.HEIGHT - 2)
+			y = TankFrame.GAME_HEIGHT - Tank.HEIGHT - 2;
 	}
 
 	public void paint(Graphics g) {
@@ -99,19 +112,19 @@ public class Tank {
 		}
 		switch (dir) {
 			case LEFT:
-				g.drawImage(ResourceMgr.tankL, x, y, null);
+				g.drawImage(this.group == Group.GOOD ? ResourceMgr.goodTankL : ResourceMgr.badTankL, x, y, null);
 				break;
 
 			case UP:
-				g.drawImage(ResourceMgr.tankU, x, y, null);
+				g.drawImage(this.group == Group.GOOD ? ResourceMgr.goodTankU : ResourceMgr.badTankU, x, y, null);
 				break;
 
 			case RIGHT:
-				g.drawImage(ResourceMgr.tankR, x, y, null);
+				g.drawImage(this.group == Group.GOOD ? ResourceMgr.goodTankR : ResourceMgr.badTankR, x, y, null);
 				break;
 
 			case DOWN:
-				g.drawImage(ResourceMgr.tankD, x, y, null);
+				g.drawImage(this.group == Group.GOOD ? ResourceMgr.goodTankD : ResourceMgr.badTankD, x, y, null);
 				break;
 
 			default:
